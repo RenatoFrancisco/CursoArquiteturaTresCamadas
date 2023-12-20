@@ -2,7 +2,7 @@ namespace DevIO.Business.Interfaces;
 
 public interface IProductRepository : IRepository<Product>
 {
-    Task<IQueryable<Product>> GetProductsBySupplier(Guid supplierId);
-    Task<IQueryable<Product>> GetProducstWithSupplier();
-    Task<Product> GetProductWithSupplier(Guid id);
+    Task<IQueryable<Product>> GetProductsBySupplierASync(Guid supplierId);
+    Task<IQueryable<Product>> GetProducstWithSupplierAsync();
+    Task<Product> GetProductWithSupplierAsync(Guid id);
 }
