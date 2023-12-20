@@ -6,11 +6,16 @@ public class SupplierService(ISupplierRepository supplierRepository) : BaseServi
 
     public async Task AddAsync(Supplier supplier)
     {
+        if (!ExecuteValidation(new SupplierValidation(), supplier)
+            || !ExecuteValidation(new AddressValidation(), supplier.Address)) return;
+
         await _supplierRepository.AddAsync(supplier);
     }
 
     public async Task UpdateAsync(Supplier supplier)
     {
+        if (!ExecuteValidation(new SupplierValidation(), supplier)) return;
+
         await _supplierRepository.UpdateAsync(supplier);
     }
 

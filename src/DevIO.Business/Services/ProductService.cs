@@ -6,11 +6,15 @@ public class ProductService(IProductRepository productRepository) : BaseService,
 
     public async Task AddAsync(Product product)
     {
+        if (!ExecuteValidation(new ProductValidation(), product)) return;
+
         await _productRepository.AddAsync(product);
     }
 
     public async Task UpdateAsync(Product product)
     {
+        if (!ExecuteValidation(new ProductValidation(), product)) return;
+        
         await _productRepository.UpdateAsync(product);
     }
 

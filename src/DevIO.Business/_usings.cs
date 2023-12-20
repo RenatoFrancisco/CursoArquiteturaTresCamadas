@@ -1,4 +1,5 @@
 global using DevIO.Business.Models.Validations.Documents;
+global using DevIO.Business.Models.Validations;
 global using Caelum.Stella.CSharp.Validation;
 global using DevIO.Business.Interfaces;
 global using System.Linq.Expressions;
