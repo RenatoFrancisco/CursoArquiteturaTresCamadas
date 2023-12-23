@@ -1,6 +1,6 @@
 namespace DevIO.Business.Services;
 
-public class SupplierService(ISupplierRepository supplierRepository) : BaseService, ISupplierService
+public class SupplierService(ISupplierRepository supplierRepository, INotifier notifier) : BaseService(notifier), ISupplierService
 {
     private readonly ISupplierRepository _supplierRepository = supplierRepository;
 
@@ -55,8 +55,5 @@ public class SupplierService(ISupplierRepository supplierRepository) : BaseServi
         await _supplierRepository.RemoveAsync(id);
     }
 
-     public void Dispose()
-    {
-        _supplierRepository?.Dispose();
-    }
+     public void Dispose() => _supplierRepository?.Dispose();
 }

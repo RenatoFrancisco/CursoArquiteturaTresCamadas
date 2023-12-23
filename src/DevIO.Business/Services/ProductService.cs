@@ -1,6 +1,6 @@
 namespace DevIO.Business.Services;
 
-public class ProductService(IProductRepository productRepository) : BaseService, IProductService
+public class ProductService(IProductRepository productRepository, INotifier notifier) : BaseService(notifier), IProductService
 {
     private readonly IProductRepository _productRepository = productRepository;
 
@@ -18,13 +18,7 @@ public class ProductService(IProductRepository productRepository) : BaseService,
         await _productRepository.UpdateAsync(product);
     }
 
-    public async Task RemoveAsync(Guid id)
-    {
-        await _productRepository.RemoveAsync(id);
-    }
-
-    public void Dispose()
-    {
-        _productRepository?.Dispose();
-    }
+    public async Task RemoveAsync(Guid id) => await _productRepository.RemoveAsync(id);
+        
+    public void Dispose() => _productRepository?.Dispose();
 }
