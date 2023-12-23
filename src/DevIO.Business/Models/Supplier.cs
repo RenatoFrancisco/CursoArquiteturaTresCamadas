@@ -7,4 +7,5 @@ public class Supplier : Entity
     public SupplierType SupplierType { get; set; }
     public bool Active { get; set; }
     public Address? Address { get; set; }
+    public IEnumerable<Product>? Products { get; set; }
 }
