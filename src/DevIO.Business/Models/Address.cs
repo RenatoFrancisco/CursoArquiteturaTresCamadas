@@ -1,3 +1,5 @@
+using System.Diagnostics.Tracing;
+
 namespace DevIO.Business.Models;
 
 public class Address : Entity
@@ -9,4 +11,7 @@ public class Address : Entity
     public string? District { get; set; }
     public string? City { get; set; }
     public string? State { get; set; }
+
+    // EF Relation
+    public Supplier? Supplier { get; set; }
 }

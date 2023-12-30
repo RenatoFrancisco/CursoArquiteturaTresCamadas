@@ -1,2 +1,0 @@
-global using DevIO.Business.Models;
-global using Microsoft.EntityFrameworkCore;
