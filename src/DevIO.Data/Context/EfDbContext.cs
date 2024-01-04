@@ -5,9 +5,11 @@ namespace DevIO.Data.Context;
 
 public class EfDbContext : DbContext
 {
+    
     public EfDbContext(DbContextOptions<EfDbContext> options) : base(options)
     {
-        
+        ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+        ChangeTracker.AutoDetectChangesEnabled = false;        
     }
 
     public DbSet<Supplier> Suppliers { get; set; }
@@ -16,7 +18,6 @@ public class EfDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
         foreach (var property in modelBuilder.Model.GetEntityTypes()
             .SelectMany(e => e.GetProperties()
                 .Where(p => p.ClrType == typeof(string))))
@@ -28,5 +29,20 @@ public class EfDbContext : DbContext
             relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        const string propertyDate = "ResgisteredOn";
+
+        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("ResgisteredOn") is not null))
+        {
+            if (entry.State == EntityState.Added)
+                entry.Property(propertyDate).CurrentValue = DateTime.Now;
+
+            if (entry.State == EntityState.Modified)
+                entry.Property(propertyDate).IsModified = false;
+        }
+        return base.SaveChangesAsync(cancellationToken);
     }
 }
