@@ -4,6 +4,7 @@ namespace DevIO.Business.Models;
 
 public class Address : Entity
 {
+    public Guid SupplierId { get; set; }
     public string? Street { get; set; }
     public string? Number { get; set; }
     public string? Complement { get; set; }
