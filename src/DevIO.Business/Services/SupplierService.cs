@@ -33,7 +33,7 @@ public class SupplierService(ISupplierRepository supplierRepository, INotifier n
 
     public async Task RemoveAsync(Guid id)
     {
-        var supplier = await _supplierRepository.GetSupplerWithProductsAndAddressAsync(id);
+        var supplier = await _supplierRepository.GetSupplierWithProductsAndAddressAsync(id);
         if (supplier is null)
         {
             Notify("Supplier does not exist!");

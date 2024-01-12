@@ -1,13 +1,14 @@
 using System.Linq.Expressions;
 using DevIO.Business.Interfaces;
 using DevIO.Business.Models;
+using DevIO.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace DevIO.Data.Repository;
 
-public abstract class Repository<TEntity>(DbContext db) : IRepository<TEntity> where TEntity : Entity, new()
+public abstract class Repository<TEntity>(EfDbContext db) : IRepository<TEntity> where TEntity : Entity, new()
 {
-    protected readonly DbContext Db = db;
+    protected readonly EfDbContext Db = db;
     protected readonly DbSet<TEntity> DbSet = db.Set<TEntity>();
 
     public virtual async Task<List<TEntity>> GetAll() => await DbSet.ToListAsync();
