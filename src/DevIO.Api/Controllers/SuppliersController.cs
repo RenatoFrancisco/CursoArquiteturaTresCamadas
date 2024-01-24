@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using DevIO.Api.ViewModels;
 using DevIO.Business.Interfaces;
@@ -6,18 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevIO.Api.Controllers;
 
-public class SuppliersController : MainController
+[Route("api/suppliers")]
+public class SuppliersController(ISupplierRepository supplierRepository,
+                                 ISupplierService supplierService,
+                                 IMapper mapper,
+                                 INotifier notifier) : MainController(notifier)
 {
-    private readonly ISupplierRepository _supplierRepository;
-    private readonly ISupplierService _supplierService;
-    private readonly IMapper _mapper;
-
-    public SuppliersController(ISupplierRepository supplierRepository, ISupplierService supplierService, IMapper mapper)
-    {
-        _supplierRepository = supplierRepository;
-        _supplierService = supplierService;
-        _mapper = mapper;
-    }
+    private readonly ISupplierRepository _supplierRepository = supplierRepository;
+    private readonly ISupplierService _supplierService = supplierService;
+    private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     public async Task<IEnumerable<SupplierViewModel>> GetAll() =>
@@ -40,7 +38,7 @@ public class SuppliersController : MainController
 
         await _supplierService.AddAsync(_mapper.Map<Supplier>(supplierViewModel));
 
-        return CustomResponse(supplierViewModel);
+        return CustomResponse(HttpStatusCode.Created, supplierViewModel);
     }
 
     [HttpPut("{id:guid}")]
@@ -56,7 +54,7 @@ public class SuppliersController : MainController
 
         await _supplierService.UpdateAsync(_mapper.Map<Supplier>(supplierViewModel));
 
-        return CustomResponse();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 
     [HttpDelete("{id:guid}")]
@@ -68,7 +66,7 @@ public class SuppliersController : MainController
 
         await _supplierService.RemoveAsync(id);
 
-        return CustomResponse();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 
     private async Task<SupplierViewModel> GetSupplier(Guid id) =>

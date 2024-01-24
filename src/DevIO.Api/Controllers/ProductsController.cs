@@ -1,3 +1,4 @@
+using System.Net;
 using AutoMapper;
 using DevIO.Api.ViewModels;
 using DevIO.Business.Interfaces;
@@ -7,18 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevIO.Api.Controllers;
 
 [Route("api/products")]
-public class ProductsController : MainController
+public class ProductsController(IProductRepository productRepository,
+                                IProductService productService,
+                                IMapper mapper,
+                                INotifier notifier) : MainController(notifier)
 {
-    private readonly IProductRepository _productRepository;
-    private readonly IProductService _productService;
-    private readonly IMapper _mapper;
-
-    public ProductsController(IProductRepository productRepository, IProductService productService, IMapper mapper)
-    {
-        _productRepository = productRepository;
-        _productService = productService;
-        _mapper = mapper;
-    }
+    private readonly IProductRepository _productRepository = productRepository;
+    private readonly IProductService _productService = productService;
+    private readonly IMapper _mapper = mapper;
 
     [HttpGet]
     public async Task<IEnumerable<ProductViewModel>> GetAll() =>
@@ -43,7 +40,7 @@ public class ProductsController : MainController
 
         await _productService.AddAsync(_mapper.Map<Product>(productViewModel));
 
-        return CustomResponse(productViewModel);
+        return CustomResponse(HttpStatusCode.Created, productViewModel);
     }
 
     [HttpPut("{id:guid}")]
@@ -65,7 +62,7 @@ public class ProductsController : MainController
 
         await _productService.UpdateAsync(_mapper.Map<Product>(updatedProduct));
 
-        return CustomResponse();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 
     [HttpDelete("{id:guid}")]
@@ -77,7 +74,7 @@ public class ProductsController : MainController
 
         await _productService.RemoveAsync(id);
 
-        return CustomResponse();
+        return CustomResponse(HttpStatusCode.NoContent);
     }
 
     private async Task<ProductViewModel> GetProduct(Guid id) =>
